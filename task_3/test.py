@@ -98,7 +98,7 @@ def test_functionality():
     assert round(time.time() - start_time, 1) == 1, (
         "проверьте, что кэширование одной функции не влияет на кэширование другой"
     )
-    assert result == 2, (
+    assert result == 4, (
         "проверьте, чтобы декоратор 'cache_args' не изменял работу функции 'long_heavy'"
     )
 
@@ -107,7 +107,7 @@ def test_functionality():
     assert round(time.time() - start_time, 1) == 0, (
         "проверьте, что декоратор кэширует результат функции"
     )
-    assert result == 2, (
+    assert result == 4, (
         "проверьте, чтобы декоратор 'cache_args' не изменял работу функции 'long_heavy'"
     )
 

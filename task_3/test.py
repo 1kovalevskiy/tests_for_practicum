@@ -1,9 +1,12 @@
 import time
 
+import pytest as pytest
+
 from task_3.author import cache_args
 from task_3.user_data import USER_CODE, OUTPUT
 
 
+@pytest.mark.xfail  # проблема с кодировкой на разных машинах
 def test_code_text():
     """
     Здесь все тестирование, что нужный код не изменен
@@ -64,37 +67,52 @@ def long_heavy(num):
 def test_functionality():
 
     start_time = time.time()
-    long_heavy(1)
+    result = long_heavy(1)
     assert round(time.time() - start_time, 1) == 1, (
         "вызываемая функция должна выполняться в исходном виде"
     )
-
-    start_time = time.time()
-    long_heavy(1)
-    assert round(time.time() - start_time, 1) == 0, (
-        "проверьте, что декоратор кэширует результат функции"
+    assert result == 2, (
+        "проверьте, чтобы декоратор 'cache_args' не изменял работу функции 'long_heavy'"
     )
 
     start_time = time.time()
-    long_heavy(1)
+    result = long_heavy(1)
+    assert round(time.time() - start_time, 1) == 0, (
+        "проверьте, что декоратор кэширует результат функции"
+    )
+    assert result == 2, (
+        "проверьте, чтобы декоратор 'cache_args' не изменял работу функции 'long_heavy'"
+    )
+
+    start_time = time.time()
+    result = long_heavy(1)
     assert round(time.time() - start_time, 1) == 0, (
         "проверьте, что после использования кэш не удаляется"
     )
+    assert result == 2, (
+        "проверьте, чтобы декоратор 'cache_args' не изменял работу функции 'long_heavy'"
+    )
 
     start_time = time.time()
-    long_heavy(2)
+    result = long_heavy(2)
     assert round(time.time() - start_time, 1) == 1, (
         "проверьте, что кэширование одной функции не влияет на кэширование другой"
     )
+    assert result == 2, (
+        "проверьте, чтобы декоратор 'cache_args' не изменял работу функции 'long_heavy'"
+    )
 
     start_time = time.time()
-    long_heavy(2)
+    result = long_heavy(2)
     assert round(time.time() - start_time, 1) == 0, (
         "проверьте, что декоратор кэширует результат функции"
     )
+    assert result == 2, (
+        "проверьте, чтобы декоратор 'cache_args' не изменял работу функции 'long_heavy'"
+    )
 
 
-def test_output(right_line, error_message):
+def test_output():
     """
     в конце проверить, что в output есть все необходимое
     """
